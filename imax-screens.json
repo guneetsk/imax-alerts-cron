@@ -1,0 +1,43 @@
+[
+  { "id": "pvr-ambience-gurugram", "name": "PVR IMAX, Ambience Mall", "city": "Gurugram", "state": "Haryana", "venueCode": "PAEG", "regionCode": "NCR" },
+  { "id": "pvr-priya-delhi", "name": "PVR IMAX, Priya (Vasant Vihar)", "city": "Delhi", "state": "Delhi", "venueCode": "PRDE", "regionCode": "NCR" },
+  { "id": "pvr-vegas-dwarka", "name": "PVR IMAX, Vegas Mall (Dwarka)", "city": "Delhi", "state": "Delhi", "venueCode": "PVDW", "regionCode": "NCR" },
+  { "id": "pvr-select-city-walk", "name": "PVR IMAX, Select Citywalk", "city": "Delhi", "state": "Delhi", "venueCode": "PVSC", "regionCode": "NCR" },
+
+  { "id": "inox-rcity-mumbai", "name": "INOX IMAX, R-City Mall (Ghatkopar)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "XLLS", "regionCode": "MUMBAI" },
+  { "id": "pvr-highstreet-phoenix-mumbai", "name": "PVR IMAX, High Street Phoenix (Lower Parel)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "PVHP", "regionCode": "MUMBAI" },
+  { "id": "inox-megaplex-mumbai", "name": "INOX IMAX Megaplex, Inorbit Mall (Malad)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "INML", "regionCode": "MUMBAI" },
+  { "id": "pvr-oberoi-goregaon", "name": "PVR IMAX, Oberoi Mall (Goregaon)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "PVOM", "regionCode": "MUMBAI" },
+
+  { "id": "pvr-forum-mall-bengaluru", "name": "PVR IMAX, Forum Mall (Koramangala)", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVFM", "regionCode": "BANG" },
+  { "id": "inox-garuda-bengaluru", "name": "INOX IMAX, Garuda Mall", "city": "Bengaluru", "state": "Karnataka", "venueCode": "INOX", "regionCode": "BANG" },
+  { "id": "pvr-nexus-whitefield", "name": "PVR IMAX, Nexus Whitefield", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVNW", "regionCode": "BANG" },
+
+  { "id": "pvr-express-avenue-chennai", "name": "PVR IMAX, Express Avenue", "city": "Chennai", "state": "Tamil Nadu", "venueCode": "PVEA", "regionCode": "CHEN" },
+  { "id": "luxe-phoenix-chennai", "name": "Luxe IMAX, Phoenix Marketcity (Velachery)", "city": "Chennai", "state": "Tamil Nadu", "venueCode": "LXPM", "regionCode": "CHEN" },
+
+  { "id": "pvr-nexus-hyderabad", "name": "PVR IMAX, Nexus Mall (Kukatpally)", "city": "Hyderabad", "state": "Telangana", "venueCode": "PVNX", "regionCode": "HYD" },
+  { "id": "inox-gvk-hyderabad", "name": "INOX IMAX, GVK One Mall", "city": "Hyderabad", "state": "Telangana", "venueCode": "INGV", "regionCode": "HYD" },
+  { "id": "pvr-next-galleria-hyderabad", "name": "PVR IMAX NEXT, Nexus Galleria", "city": "Hyderabad", "state": "Telangana", "venueCode": "PVNG", "regionCode": "HYD" },
+
+  { "id": "inox-south-city-kolkata", "name": "INOX IMAX, South City Mall", "city": "Kolkata", "state": "West Bengal", "venueCode": "INSC", "regionCode": "KOLK" },
+
+  { "id": "pvr-phoenix-pune", "name": "PVR IMAX, Phoenix Marketcity (Viman Nagar)", "city": "Pune", "state": "Maharashtra", "venueCode": "PVPN", "regionCode": "PUNE" },
+  { "id": "inox-westend-pune", "name": "INOX IMAX, Westend Mall (Aundh)", "city": "Pune", "state": "Maharashtra", "venueCode": "INWE", "regionCode": "PUNE" },
+
+  { "id": "pvr-elante-chandigarh", "name": "PVR IMAX, Elante Mall", "city": "Chandigarh", "state": "Chandigarh", "venueCode": "PVEL", "regionCode": "CHD" },
+
+  { "id": "inox-prozone-ahmedabad", "name": "INOX IMAX, Prozone Mall (SG Highway)", "city": "Ahmedabad", "state": "Gujarat", "venueCode": "INPZ", "regionCode": "AHD" },
+  { "id": "pvr-acropolis-ahmedabad", "name": "PVR IMAX, Acropolis Mall", "city": "Ahmedabad", "state": "Gujarat", "venueCode": "PVAC", "regionCode": "AHD" },
+
+  { "id": "pvr-lulu-lucknow", "name": "PVR IMAX, Lulu Mall", "city": "Lucknow", "state": "Uttar Pradesh", "venueCode": "PVLL", "regionCode": "LUCK" },
+
+  { "id": "inox-nexus-indore", "name": "INOX IMAX, Nexus Central Mall", "city": "Indore", "state": "Madhya Pradesh", "venueCode": "INNX", "regionCode": "INDR" },
+
+  { "id": "pvr-lulu-kochi", "name": "PVR IMAX, Lulu Mall", "city": "Kochi", "state": "Kerala", "venueCode": "PVLK", "regionCode": "KOCH" },
+  { "id": "pvr-lulu-trivandrum", "name": "PVR IMAX, Lulu Mall", "city": "Thiruvananthapuram", "state": "Kerala", "venueCode": "PVLT", "regionCode": "TVRM" },
+
+  { "id": "inox-mantri-jaipur", "name": "INOX IMAX, GT Central (Malviya Nagar)", "city": "Jaipur", "state": "Rajasthan", "venueCode": "INGT", "regionCode": "JAIP" },
+
+  { "id": "pvr-acropolis-nagpur", "name": "PVR IMAX, Empress Mall", "city": "Nagpur", "state": "Maharashtra", "venueCode": "PVEM", "regionCode": "NAGP" }
+]
