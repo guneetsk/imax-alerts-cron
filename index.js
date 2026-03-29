@@ -5,6 +5,9 @@ const SCREENS_DATA = require('./imax-screens.json');
 const screenMap = {};
 for (const s of SCREENS_DATA) screenMap[s.venueCode] = s.regionCode;
 
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com', port: 465, secure: true,
   auth: { user: 'alerts.guneet@gmail.com', pass: process.env.GMAIL_APP_PASSWORD },
