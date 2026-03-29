@@ -6,8 +6,9 @@ const screenMap = {};
 for (const s of SCREENS_DATA) screenMap[s.venueCode] = s.regionCode;
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com', port: 587, secure: false,
-  auth: { user: 'alerts.guneet@gmail.com', pass: process.env.GMAIL_APP_PASSWORD }
+  host: 'smtp.gmail.com', port: 465, secure: true,
+  auth: { user: 'alerts.guneet@gmail.com', pass: process.env.GMAIL_APP_PASSWORD },
+  connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000
 });
 
 function escapeHtml(s) {
