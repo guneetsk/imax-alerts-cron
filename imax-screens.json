@@ -9,9 +9,12 @@
   { "id": "inox-megaplex-mumbai", "name": "INOX IMAX Megaplex, Inorbit Mall (Malad)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "INML", "regionCode": "MUMBAI" },
   { "id": "pvr-oberoi-goregaon", "name": "PVR IMAX, Oberoi Mall (Goregaon)", "city": "Mumbai", "state": "Maharashtra", "venueCode": "PVOM", "regionCode": "MUMBAI" },
 
-  { "id": "pvr-forum-mall-bengaluru", "name": "PVR IMAX, Forum Mall (Koramangala)", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVFM", "regionCode": "BANG" },
-  { "id": "inox-garuda-bengaluru", "name": "INOX IMAX, Garuda Mall", "city": "Bengaluru", "state": "Karnataka", "venueCode": "INOX", "regionCode": "BANG" },
-  { "id": "pvr-nexus-whitefield", "name": "PVR IMAX, Nexus Whitefield", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVNW", "regionCode": "BANG" },
+  { "id": "pvr-nexus-forum-bengaluru", "name": "PVR IMAX, Nexus (Forum) Koramangala", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVFF", "regionCode": "BANG" },
+  { "id": "inox-mantri-bengaluru", "name": "INOX IMAX, Mantri Square, Malleshwaram", "city": "Bengaluru", "state": "Karnataka", "venueCode": "INMB", "regionCode": "BANG" },
+  { "id": "inox-galleria-bengaluru", "name": "INOX IMAX, Galleria Mall, Yelahanka", "city": "Bengaluru", "state": "Karnataka", "venueCode": "INRZ", "regionCode": "BANG" },
+  { "id": "pvr-vega-city-bengaluru", "name": "PVR IMAX, Vega City, Bannerghatta Road", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVER", "regionCode": "BANG" },
+  { "id": "pvr-vr-whitefield-bengaluru", "name": "PVR IMAX, VR Bengaluru, Whitefield", "city": "Bengaluru", "state": "Karnataka", "venueCode": "PVWW", "regionCode": "BANG" },
+  { "id": "cinepolis-nexus-bengaluru", "name": "Cinepolis IMAX, Nexus Shantiniketan", "city": "Bengaluru", "state": "Karnataka", "venueCode": "CFBS", "regionCode": "BANG" },
 
   { "id": "pvr-express-avenue-chennai", "name": "PVR IMAX, Express Avenue", "city": "Chennai", "state": "Tamil Nadu", "venueCode": "PVEA", "regionCode": "CHEN" },
   { "id": "luxe-phoenix-chennai", "name": "Luxe IMAX, Phoenix Marketcity (Velachery)", "city": "Chennai", "state": "Tamil Nadu", "venueCode": "LXPM", "regionCode": "CHEN" },
@@ -22,8 +25,8 @@
 
   { "id": "inox-south-city-kolkata", "name": "INOX IMAX, South City Mall", "city": "Kolkata", "state": "West Bengal", "venueCode": "INSC", "regionCode": "KOLK" },
 
-  { "id": "pvr-phoenix-pune", "name": "PVR IMAX, Phoenix Marketcity (Viman Nagar)", "city": "Pune", "state": "Maharashtra", "venueCode": "PVPN", "regionCode": "PUNE" },
-  { "id": "inox-westend-pune", "name": "INOX IMAX, Westend Mall (Aundh)", "city": "Pune", "state": "Maharashtra", "venueCode": "INWE", "regionCode": "PUNE" },
+  { "id": "inox-megaplex-phoenix-pune", "name": "INOX Megaplex IMAX, Phoenix Mall Wakad", "city": "Pune", "state": "Maharashtra", "venueCode": "PMPW", "regionCode": "PUNE" },
+  { "id": "cinepolis-westend-pune", "name": "Cinepolis IMAX, Nexus Westend Mall Aundh", "city": "Pune", "state": "Maharashtra", "venueCode": "CNWE", "regionCode": "PUNE" },
 
   { "id": "pvr-elante-chandigarh", "name": "PVR IMAX, Elante Mall", "city": "Chandigarh", "state": "Chandigarh", "venueCode": "PVEL", "regionCode": "CHD" },
 
