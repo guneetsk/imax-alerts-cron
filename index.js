@@ -19,15 +19,21 @@ function formatDate(dc) {
     .toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-const { execFileSync } = require('child_process');
+const https = require('https');
 
 function fetchBMS(url) {
-  const result = execFileSync('curl', [
-    '-s', url,
-    '-H', `User-Agent: ${UA}`,
-    '-H', 'Accept: application/json',
-  ], { encoding: 'utf8', timeout: 15000 });
-  return JSON.parse(result);
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers: { 'User-Agent': UA, 'Accept': 'application/json' } }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error(`Parse failed (HTTP ${res.statusCode}): ${data.slice(0, 100)}`)); }
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Timeout')); });
+  });
 }
 
 async function main() {
@@ -37,7 +43,7 @@ async function main() {
   const today = new Date();
   const todayCode = today.getFullYear().toString() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
   try {
-    const testData = fetchBMS(`https://in.bookmyshow.com/api/v3/mobile/showtimes/byvenue?venueCode=PAEG&regionCode=NCR&dateCode=${todayCode}&appCode=WEB`);
+    const testData = await fetchBMS(`https://in.bookmyshow.com/api/v3/mobile/showtimes/byvenue?venueCode=PAEG&regionCode=NCR&dateCode=${todayCode}&appCode=WEB`);
     console.log(`BMS connectivity test (PAEG/${todayCode}): OK, ${(testData.ShowDetails || []).length} days`);
   } catch (e) {
     console.error(`BMS connectivity test FAILED: ${e.message?.slice(0, 80)}`);
@@ -67,7 +73,7 @@ async function main() {
     if (!rc) continue;
     const url = `https://in.bookmyshow.com/api/v3/mobile/showtimes/byvenue?venueCode=${vc}&regionCode=${rc}&dateCode=${dc}&appCode=WEB`;
     try {
-      const data = fetchBMS(url);
+      const data = await fetchBMS(url);
       const shows = [];
       for (const day of (data.ShowDetails || [])) {
         for (const ev of (day.Event || [])) {
