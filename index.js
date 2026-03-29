@@ -1,18 +1,24 @@
 const { neon } = require('@neondatabase/serverless');
-const nodemailer = require('nodemailer');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const SCREENS_DATA = require('./imax-screens.json');
 const screenMap = {};
 for (const s of SCREENS_DATA) screenMap[s.venueCode] = s.regionCode;
 
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
+const SEND_ALERT_URL = process.env.SEND_ALERT_URL || 'https://imaxalerts.guneetsk.com/api/cron/send-alert';
+const CRON_SECRET = process.env.CRON_SECRET;
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com', port: 465, secure: true,
-  auth: { user: 'alerts.guneet@gmail.com', pass: process.env.GMAIL_APP_PASSWORD },
-  connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000
-});
+async function sendEmail(to, subject, html) {
+  const res = await fetch(SEND_ALERT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret: CRON_SECRET, to, subject, html }),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Email API ${res.status}: ${body.slice(0, 100)}`);
+  }
+}
 
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -66,7 +72,7 @@ async function main() {
   }
   console.log(`Need to check ${pairs.size} venue/date pairs`);
 
-  // 3. Fetch BMS data via curl (same method as the working personal bot)
+  // 3. Fetch BMS data via ScraperAPI
   const showsByPair = {};
   for (const pair of pairs) {
     const [vc, dc] = pair.split('|');
@@ -133,7 +139,7 @@ async function main() {
       continue;
     }
 
-    // Send alert email
+    // Send alert email via Vercel endpoint
     const rows = matched.map(s => `<tr>
       <td style="padding:8px;border-bottom:1px solid #eee">${formatDate(s.date)}</td>
       <td style="padding:8px;border-bottom:1px solid #eee"><strong>${escapeHtml(s.time)}</strong></td>
@@ -144,34 +150,35 @@ async function main() {
     </tr>`).join('');
 
     const unsubUrl = `https://imaxalerts.guneetsk.com/api/unsubscribe?token=${sub.unsubscribe_token}`;
+    const html = `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:640px;margin:0 auto">
+      <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed,#9333ea);padding:32px 24px;border-radius:16px 16px 0 0">
+        <h2 style="color:#fff;margin:0 0 4px 0;font-size:20px;font-weight:700">IMAX Alerts</h2>
+        <p style="color:rgba(255,255,255,0.9);margin:0;font-size:16px;font-weight:600">Bookings are open!</p>
+      </div>
+      <div style="background:#fff;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 16px 16px">
+        <p style="color:#374151;font-size:15px;margin:0 0 16px 0"><strong>${escapeHtml(sub.movie_name)}</strong> — ${matched.length} IMAX show(s) found:</p>
+        <table style="border-collapse:collapse;width:100%;font-size:14px">
+          <tr style="background:#f3f2ff">
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Date</th>
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Time</th>
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Screen</th>
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Status</th>
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Price</th>
+            <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Link</th>
+          </tr>
+          ${rows}
+        </table>
+        <p style="margin:20px 0 0 0;color:#6b7280;font-size:13px">This alert has been automatically deactivated.</p>
+        <p style="color:#9ca3af;font-size:12px;margin:12px 0 0 0"><a href="${unsubUrl}" style="color:#9ca3af">Unsubscribe</a> &middot; IMAX Alerts by guneetsk.com</p>
+      </div>
+    </div>`;
+
     try {
-      await transporter.sendMail({
-        from: '"IMAX Alerts" <alerts.guneet@gmail.com>',
-        to: sub.email,
-        subject: `Bookings open! ${sub.movie_name} IMAX tickets are live`,
-        html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:640px;margin:0 auto">
-          <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed,#9333ea);padding:32px 24px;border-radius:16px 16px 0 0">
-            <h2 style="color:#fff;margin:0 0 4px 0;font-size:20px;font-weight:700">IMAX Alerts</h2>
-            <p style="color:rgba(255,255,255,0.9);margin:0;font-size:16px;font-weight:600">Bookings are open!</p>
-          </div>
-          <div style="background:#fff;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 16px 16px">
-            <p style="color:#374151;font-size:15px;margin:0 0 16px 0"><strong>${escapeHtml(sub.movie_name)}</strong> — ${matched.length} IMAX show(s) found:</p>
-            <table style="border-collapse:collapse;width:100%;font-size:14px">
-              <tr style="background:#f3f2ff">
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Date</th>
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Time</th>
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Screen</th>
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Status</th>
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Price</th>
-                <th style="padding:10px 8px;text-align:left;color:#4f46e5;font-size:12px;text-transform:uppercase">Link</th>
-              </tr>
-              ${rows}
-            </table>
-            <p style="margin:20px 0 0 0;color:#6b7280;font-size:13px">This alert has been automatically deactivated.</p>
-            <p style="color:#9ca3af;font-size:12px;margin:12px 0 0 0"><a href="${unsubUrl}" style="color:#9ca3af">Unsubscribe</a> &middot; IMAX Alerts by guneetsk.com</p>
-          </div>
-        </div>`
-      });
+      await sendEmail(
+        sub.email,
+        `Bookings open! ${sub.movie_name} IMAX tickets are live`,
+        html
+      );
       emailsSent++;
       console.log(`  Sub ${sub.id.slice(0, 8)}: ALERT SENT to ${sub.email} (${matched.length} shows)`);
 
