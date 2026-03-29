@@ -29,6 +29,11 @@ function formatDate(dc) {
     .toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+function todayCode() {
+  const d = new Date();
+  return d.getFullYear().toString() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+}
+
 const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY;
 
 async function fetchBMS(url) {
@@ -45,32 +50,34 @@ async function fetchBMS(url) {
 
 async function main() {
   const sql = neon(process.env.DATABASE_URL);
-
-  // 0. Test BMS connectivity with today's date (known working)
-  const today = new Date();
-  const todayCode = today.getFullYear().toString() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
-  try {
-    const testData = await fetchBMS(`https://in.bookmyshow.com/api/v3/mobile/showtimes/byvenue?venueCode=PAEG&regionCode=NCR&dateCode=${todayCode}&appCode=WEB`);
-    console.log(`BMS connectivity test (PAEG/${todayCode}): OK, ${(testData.ShowDetails || []).length} days`);
-  } catch (e) {
-    console.error(`BMS connectivity test FAILED: ${e.message?.slice(0, 80)}`);
-  }
+  const today = todayCode();
 
   // 1. Get active subscriptions
   const subs = await sql.query("SELECT * FROM subscriptions WHERE active = true AND email_verified = true");
   if (subs.length === 0) { console.log('No active subscriptions.'); return; }
   console.log(`Found ${subs.length} active subscription(s)`);
 
-  // 2. Collect unique (venueCode, date) pairs
+  // 2. Collect unique (venueCode, date) pairs — skip past dates
   const pairs = new Set();
+  let skippedPast = 0;
   for (const sub of subs) {
     for (const vc of sub.venue_codes) {
       for (const dc of sub.target_dates) {
+        if (dc < today) { skippedPast++; continue; }
         pairs.add(vc + '|' + dc);
       }
     }
   }
-  console.log(`Need to check ${pairs.size} venue/date pairs`);
+  console.log(`Need to check ${pairs.size} venue/date pairs (skipped ${skippedPast} past dates)`);
+
+  if (pairs.size === 0) {
+    console.log('No future dates to check.');
+    // Update last_checked_at for all subs
+    for (const sub of subs) {
+      await sql.query("UPDATE subscriptions SET last_checked_at = NOW() WHERE id = $1", [sub.id]);
+    }
+    return;
+  }
 
   // 3. Fetch BMS data via ScraperAPI
   const showsByPair = {};
@@ -120,6 +127,7 @@ async function main() {
     const matched = [];
     for (const vc of sub.venue_codes) {
       for (const dc of sub.target_dates) {
+        if (dc < today) continue;
         const shows = showsByPair[vc + '|' + dc];
         if (!shows) continue;
         const movieShows = shows.filter(s => s.eventCode === sub.movie_event_code);
